@@ -8,7 +8,7 @@ from src.style import BLUE, GREEN, RED, TEXT_COLOR, YELLOW, apply_global_style
 def run() -> None:
     # 1. Load data
     data_path = ROOT_DIR / "data" / "whaling_data_clean.csv"
-    df = pd.read_csv(data_path)
+    df = pd.read_csv(data_path, low_memory=False)
 
     # 2. Preprocess
     # Group by 5-year intervals (five-year periods)
@@ -70,6 +70,59 @@ def run() -> None:
         label="Средняя продолжительность рейса",
     )
 
+    # Add arrows as in sample2.jpg
+    # One blue dashed arrow pointing up from the duration line peak
+    ax.annotate(
+        "",
+        xy=(1848, 105),  # End of the arrow (tip)
+        xytext=(1848, 85),  # Start of the arrow (tail)
+        arrowprops={
+            "arrowstyle": "->",
+            "linestyle": "--",
+            "color": BLUE,
+            "linewidth": 2,
+            "mutation_scale": 20,
+        },
+    )
+
+    # Three other markers (arrows/indicators) near each other as in sample2
+    # In sample2 they are positioned near 1860, pointing down
+    # (Green, Red, Yellow arrows)
+    x_pos = 1862
+    ax.annotate(
+        "",
+        xy=(x_pos - 2, 55),
+        xytext=(x_pos - 2, 65),
+        arrowprops={
+            "arrowstyle": "->",
+            "color": GREEN,
+            "linewidth": 2,
+            "mutation_scale": 20,
+        },
+    )
+    ax.annotate(
+        "",
+        xy=(x_pos, 55),
+        xytext=(x_pos, 65),
+        arrowprops={
+            "arrowstyle": "->",
+            "color": RED,
+            "linewidth": 2,
+            "mutation_scale": 20,
+        },
+    )
+    ax.annotate(
+        "",
+        xy=(x_pos + 2, 55),
+        xytext=(x_pos + 2, 65),
+        arrowprops={
+            "arrowstyle": "->",
+            "color": YELLOW,
+            "linewidth": 2,
+            "mutation_scale": 20,
+        },
+    )
+
     # Visual style following sample2.jpg (but with white background)
     ax.set_title(
         "Сравнительная динамика добычи и продолжительности рейсов",
@@ -85,7 +138,7 @@ def run() -> None:
 
     # Axis limits and ticks
     ax.set_xlim(grouped["five_year"].min(), grouped["five_year"].max())
-    ax.set_ylim(0, 110)  # A bit above 100 for better view
+    ax.set_ylim(0, 115)  # A bit more room for arrows
 
     # Legend
     ax.legend(loc="lower center", bbox_to_anchor=(0.5, -0.3), ncol=2, frameon=True)

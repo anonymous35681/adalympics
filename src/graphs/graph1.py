@@ -8,7 +8,7 @@ from src.style import BLUE, TEXT_COLOR, YELLOW, apply_global_style
 def run() -> None:
     # 1. Load data
     data_path = ROOT_DIR / "data" / "whaling_data_clean.csv"
-    df = pd.read_csv(data_path)
+    df = pd.read_csv(data_path, low_memory=False)
 
     # 2. Preprocess
     # Group by 5-year intervals (five-year periods)
@@ -57,6 +57,25 @@ def run() -> None:
         linewidth=2,
         linestyle="--",
         label="Успешность рейсов (отн.)",
+    )
+
+    # Find the actual peak of the duration line
+    peak_idx = grouped["voyage_duration"].idxmax()
+    peak_x = grouped.loc[peak_idx, "five_year"]
+    peak_y = grouped.loc[peak_idx, "voyage_duration"]
+
+    # Draw the point (large blue circle)
+    ax.plot(peak_x, peak_y, "o", color=BLUE, markersize=12)
+
+    # Text label next to the peak
+    ax.text(
+        peak_x + 3,
+        peak_y,
+        f"{int(peak_x)} г.\nсреднее {peak_y:.2f} лет.",
+        color=TEXT_COLOR,
+        fontsize=12,
+        fontweight="bold",
+        verticalalignment="center",
     )
 
     # Visual style following sample1.jpg (but with white background)
