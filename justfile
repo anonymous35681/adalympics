@@ -10,3 +10,7 @@ qa:
 # Generate all graphics (or specific graph with number)
 run: qa
     uv run src/main.py
+
+# Generate report.md
+report:
+    uv run src/report.py
